@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.lambda.weibo.fragments.StatusFragment">
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton"
+            android:maxHeight="@dimen/profile_middle" android:maxWidth="@dimen/profile_middle" android:minHeight="@dimen/profile_middle"
+            android:nestedScrollingEnabled="true" android:minWidth="@dimen/profile_middle" android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/status_user_textview"
+            android:text="username"
+            android:layout_alignParentTop="true" android:layout_toEndOf="@+id/imageButton"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:id="@+id/status_time_textview" android:text="time"
+            android:layout_alignBottom="@+id/imageButton" android:layout_toEndOf="@+id/imageButton"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:id="@+id/status_text_textview" android:text="text"
+            android:layout_below="@+id/status_time_textview" android:layout_centerHorizontal="true"/>
+
+
+    <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:scrollbars="vertical"
+                  android:id="@+id/comments_recycle_view" android:layout_below="@+id/status_text_textview"/>
+
+</RelativeLayout>
