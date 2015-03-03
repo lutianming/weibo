@@ -1,17 +1,19 @@
 package com.lambda.weibo.fragments;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.lambda.weibo.adapters.StatusAdapter;
-
 import com.lambda.weibo.app.R;
+import com.lambda.weibo.fields.Status;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -26,11 +28,11 @@ public class StatusesFragment extends Fragment{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
+    private static final String STATUSES = "statuses";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private JSONObject data;
+    private ArrayList<Status> statuses;
 
     private OnFragmentInteractionListener mListener;
 
@@ -39,11 +41,11 @@ public class StatusesFragment extends Fragment{
     private LinearLayoutManager layoutManager;
 
     // TODO: Rename and change types of parameters
-    public static StatusesFragment newInstance(JSONObject data) {
+    public static StatusesFragment newInstance(ArrayList<Status> statuses) {
         StatusesFragment fragment = new StatusesFragment();
         Bundle args = new Bundle();
+        args.putParcelableArrayList(STATUSES, statuses);
         fragment.setArguments(args);
-        fragment.data = data;
         return fragment;
     }
 
@@ -58,11 +60,11 @@ public class StatusesFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            //mParam2 = getArguments().getString(ARG_PARAM2);
+             statuses = getArguments().getParcelableArrayList(STATUSES);
         }
 
         // TODO: Change Adapter to display your content
-        adapter = new StatusAdapter(data);
+        adapter = new StatusAdapter(statuses);
     }
 
     @Override

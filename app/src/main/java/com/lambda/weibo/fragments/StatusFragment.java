@@ -1,25 +1,25 @@
 package com.lambda.weibo.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.lambda.weibo.adapters.CommentAdapter;
-import com.lambda.weibo.adapters.StatusAdapter;
 import com.lambda.weibo.app.R;
+import com.lambda.weibo.fields.Comment;
 import com.lambda.weibo.fields.Status;
 import com.lambda.weibo.fields.User;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
+import com.lambda.weibo.requests.RequestHandler;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,39 +32,38 @@ import org.w3c.dom.Text;
 public class StatusFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String STATUS = "status";
+    private static final String COMMENTS = "comments";
 
     // TODO: Rename and change types of parameters
     private TextView statusUserTextView;
     private TextView statusTimeTextView;
     private TextView statusTextView;
-
+    private NetworkImageView profileImageView;
+    private ImageLoader imageLoader;
     private RecyclerView commentsView;
     private RecyclerView.Adapter adapter;
     private LinearLayoutManager layoutManager;
 
-    private JSONObject status;
-    private JSONObject comments;
+    private Status status;
+    private ArrayList<Comment> comments;
     private OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param status
+     * @param comments
      * @return A new instance of fragment StatusFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static StatusFragment newInstance(JSONObject status, JSONObject comments) {
+    public static StatusFragment newInstance(Status status, ArrayList<Comment> comments) {
         StatusFragment fragment = new StatusFragment();
         Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
+        args.putParcelable(STATUS, status);
+        args.putParcelableArrayList(COMMENTS, comments);
         fragment.setArguments(args);
-        fragment.status = status;
-        fragment.comments = comments;
         return fragment;
     }
 
@@ -76,8 +75,8 @@ public class StatusFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
+            status = getArguments().getParcelable(STATUS);
+            comments = getArguments().getParcelableArrayList(COMMENTS);
         }
         adapter = new CommentAdapter(comments);
     }
@@ -90,16 +89,14 @@ public class StatusFragment extends Fragment {
         statusUserTextView = (TextView) view.findViewById(R.id.status_user_textview);
         statusTimeTextView = (TextView) view.findViewById(R.id.status_time_textview);
         statusTextView = (TextView) view.findViewById(R.id.status_text_textview);
+        profileImageView = (NetworkImageView) view.findViewById(R.id.status_profile_image_view);
+        imageLoader = RequestHandler.getInstance(view.getContext()).getImageLoader();
 
-        try {
-            JSONObject user = status.getJSONObject(Status.USER);
-            statusUserTextView.setText(user.getString(User.NAME));
-            statusTimeTextView.setText(status.getString(Status.CREATED_AT));
-            statusTextView.setText(status.getString(Status.TEXT));
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        User user = status.getUser();
+        statusUserTextView.setText(user.getName());
+        statusTimeTextView.setText(status.getCreated_at());
+        statusTextView.setText(status.getText());
+        profileImageView.setImageUrl(user.getProfile_image_url(), imageLoader);
 
         Activity activity = getActivity();
         commentsView = (RecyclerView) view.findViewById(R.id.comments_recycle_view);

@@ -15,10 +15,13 @@ public class StatusesUri extends BaseUri{
         return builder.build().toString();
     }
 
-    public static String friendsTimeLine(String access_token){
+    public static String friendsTimeLine(String access_token, int count){
         Uri.Builder builder = getBuilder()
                 .appendPath("friends_timeline.json")
-                .appendQueryParameter("access_token", access_token);
+                .appendQueryParameter("access_token", access_token)
+                .appendQueryParameter("count", String.valueOf(count))
+                .appendQueryParameter("page", String.valueOf(1));
+
         return builder.build().toString();
     }
     public static String friendsTimeLine(String access_token, long since_id,

@@ -18,13 +18,21 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.lambda.weibo.fields.AuthInfo;
+import com.lambda.weibo.fields.Status;
 import com.lambda.weibo.fragments.StatusFragment;
 import com.lambda.weibo.fragments.StatusesFragment;
+import com.lambda.weibo.requests.RequestHandler;
 import com.lambda.weibo.uris.AuthorizeUri;
 import com.lambda.weibo.uris.StatusesUri;
 import com.lambda.weibo.uris.UsersUri;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity implements
@@ -76,14 +84,7 @@ public class MainActivity extends ActionBarActivity implements
         };
         drawerLayout.setDrawerListener(drawerToggle);
 
-        Log.d(TAG, String.valueOf(isAuthorized()));
-
-        if(isAuthorized()){
-            updateStatuses();
-        }else{
-            //TODO: to login
-            //authorize();
-        }
+        isAuthorized();
     }
 
     @Override
@@ -117,21 +118,58 @@ public class MainActivity extends ActionBarActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean isAuthorized(){
+    private void isAuthorized(){
         SharedPreferences preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        return preferences.contains("access_token");
+
+        if(preferences.contains("access_token")){
+            String access_token = preferences.getString("access_token", "");
+            String uri = AuthorizeUri.getTokenInfo(access_token);
+            JsonObjectRequest request = new JsonObjectRequest
+                    (Request.Method.POST, uri, null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Gson gson = new Gson();
+                            AuthInfo info = gson.fromJson(response.toString(), AuthInfo.class);
+                            //2 hours
+                            if(info.getExpire_in() > 60*60*2){
+                                updateStatuses();
+                            }else{
+                                authorize();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    });
+            RequestHandler.getInstance(this).addToRequestQueue(request);
+        }else{
+            authorize();
+        }
     }
     private void updateStatuses(){
         SharedPreferences preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         access_token = preferences.getString("access_token", "");
         uid = preferences.getString("uid", "");
 
-        String uri = StatusesUri.friendsTimeLine(access_token);
+        String uri = StatusesUri.friendsTimeLine(access_token, 50);
+        Log.d(TAG, uri);
         JsonObjectRequest request = new JsonObjectRequest
                 (Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        StatusesFragment fragment = StatusesFragment.newInstance(response);
+                        Gson gson = new Gson();
+                        Type listType = new TypeToken<ArrayList<Status>>() {}.getType();
+                        String data = "";
+                        try {
+                            data = response.getJSONArray("statuses").toString(4);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        ArrayList<Status> statuses = gson.fromJson(data, listType);
+                        StatusesFragment fragment = StatusesFragment.newInstance(statuses);
                         FragmentManager manager = getFragmentManager();
                         FragmentTransaction transaction = manager.beginTransaction();
                         transaction.replace(R.id.fragment_container, fragment);
@@ -183,21 +221,16 @@ public class MainActivity extends ActionBarActivity implements
 
                             @Override
                             public void onResponse(JSONObject response) {
-                                try {
-                                    access_token = response.getString("access_token");
-                                    expires_in = response.getString("expires_in");
-                                    uid = response.getString("uid");
-                                    SharedPreferences preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = preferences.edit();
-                                    editor.putString("access_token", access_token);
-                                    editor.putString("expires_in", access_token);
-                                    editor.putString("uid", uid);
-                                    editor.commit();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                //TextView textView = (TextView) findViewById(R.id.textView);
-                                //textView.setText("Response: " + response.toString());
+                                Gson gson = new Gson();
+                                AuthInfo info = gson.fromJson(response.toString(), AuthInfo.class);
+
+                                SharedPreferences preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putString("access_token", info.getAccess_token());
+                                editor.putLong("expires_in", info.getExpire_in());
+                                editor.putLong("uid", info.getUid());
+                                editor.commit();
+
                             }
                         }, new Response.ErrorListener() {
 

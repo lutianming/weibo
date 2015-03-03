@@ -1,4 +1,4 @@
-package com.lambda.weibo.app;
+package com.lambda.weibo.requests;
 
 import android.content.Context;
 import android.graphics.Bitmap;

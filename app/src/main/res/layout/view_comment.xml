@@ -3,21 +3,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <ImageButton
+    <com.android.volley.toolbox.NetworkImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/comment_icon_button" android:layout_alignParentTop="true" android:layout_alignParentStart="true"
+            android:id="@+id/comment_profile_image_view" android:layout_alignParentTop="true" android:layout_alignParentStart="true"
             android:minHeight="@dimen/profile_middle" android:minWidth="@dimen/profile_middle"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
-            android:id="@+id/comment_name_textview" android:layout_alignParentTop="true" android:layout_toEndOf="@+id/comment_icon_button"/>
+            android:id="@+id/comment_name_textview" android:layout_alignParentTop="true" android:layout_toEndOf="@+id/comment_profile_image_view"/>
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="New Text"
             android:id="@+id/comment_text_textview"
-            android:layout_below="@+id/comment_name_textview" android:layout_toEndOf="@+id/comment_icon_button"
-            android:layout_alignBottom="@+id/comment_icon_button"/>
+            android:layout_below="@+id/comment_name_textview" android:layout_toEndOf="@+id/comment_profile_image_view"
+            android:layout_alignBottom="@+id/comment_profile_image_view"/>
 </RelativeLayout>
