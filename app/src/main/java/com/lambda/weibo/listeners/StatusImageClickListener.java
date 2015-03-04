@@ -24,7 +24,7 @@ public class StatusImageClickListener implements AdapterView.OnItemClickListener
         Activity activity = (Activity) view.getContext();
         FragmentManager manager = activity.getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        ImagesFragment fragment = ImagesFragment.newInstance(urls);
+        ImagesFragment fragment = ImagesFragment.newInstance(urls, position);
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();

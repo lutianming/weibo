@@ -26,9 +26,11 @@ public class ImageFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String IMG = "img";
-
+    private static final String THUMBNAIL = "thumbnail";
+    private static final String ORIGINAL = "large";
     // TODO: Rename and change types of parameters
     private ImageUrl imageUrl;
+    private String largeImgUrl;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,6 +60,7 @@ public class ImageFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             imageUrl = getArguments().getParcelable(IMG);
+            largeImgUrl = imageUrl.getThumbnail_pic().replace(THUMBNAIL, ORIGINAL);
         }
 
     }
@@ -69,7 +72,7 @@ public class ImageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_image, container, false);
         NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.image_view);
         ImageLoader loader = RequestHandler.getInstance(view.getContext()).getImageLoader();
-        imageView.setImageUrl(imageUrl.getThumbnail_pic(), loader);
+        imageView.setImageUrl(largeImgUrl, loader);
         return view;
     }
 

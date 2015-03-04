@@ -27,10 +27,12 @@ public class ImagesFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String IMGS = "images";
+    private static final String START_POS = "start";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
     private ArrayList<ImageUrl> images;
+    private int startPos;
     private ViewPager imagePager;
     private ImageAdapter adapter;
     private OnFragmentInteractionListener mListener;
@@ -44,10 +46,11 @@ public class ImagesFragment extends Fragment {
      * @return A new instance of fragment ImagesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ImagesFragment newInstance(ArrayList<ImageUrl> images) {
+    public static ImagesFragment newInstance(ArrayList<ImageUrl> images, int position) {
         ImagesFragment fragment = new ImagesFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(IMGS, images);
+        args.putInt(START_POS, position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,6 +64,7 @@ public class ImagesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             images = getArguments().getParcelableArrayList(IMGS);
+            startPos = getArguments().getInt(START_POS);
         }
         adapter = new ImageAdapter(getActivity().getFragmentManager(), images);
     }
@@ -72,6 +76,7 @@ public class ImagesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_images, container, false);
         imagePager = (ViewPager) view.findViewById(R.id.images_pager);
         imagePager.setAdapter(adapter);
+        imagePager.setCurrentItem(startPos);
         return view;
     }
 
