@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 import com.android.volley.Request;
@@ -27,6 +26,7 @@ import com.lambda.weibo.fields.ImageUrl;
 import com.lambda.weibo.fields.Status;
 import com.lambda.weibo.fields.User;
 import com.lambda.weibo.fragments.StatusFragment;
+import com.lambda.weibo.listeners.StatusImageClickListener;
 import com.lambda.weibo.requests.RequestHandler;
 import com.lambda.weibo.uris.CommentsUri;
 import org.json.JSONException;
@@ -83,12 +83,6 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
             statusView = (TextView) view.findViewById(R.id.status_textview);
             profileImageView = (NetworkImageView) view.findViewById(R.id.status_profile_image_view);
             picsGridView = (GridView) view.findViewById(R.id.status_pics_grid_view);
-            picsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                }
-            });
             imageLoader = RequestHandler.getInstance(view.getContext()).getImageLoader();
             view.setOnClickListener(this);
         }
@@ -100,15 +94,17 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
             profileImageView.setImageUrl(user.getProfile_image_url(), imageLoader);
             timeView.setText(status.getCreated_at());
             statusView.setText(status.getText());
-            ImageUrl[] pic_urls = status.getPic_urls();
+            ArrayList<ImageUrl> pic_urls = status.getPic_urls();
 
-            if (pic_urls != null && pic_urls.length > 0) {
-                ImageAdapter adapter = new ImageAdapter(this.itemView.getContext(), pic_urls);
-                int rows = (pic_urls.length-1) / 3 + 1;
+            if (pic_urls != null && pic_urls.size() > 0) {
+                ThumbnailAdapter adapter = new ThumbnailAdapter(this.itemView.getContext(), pic_urls);
+                int rows = (pic_urls.size()-1) / 3 + 1;
                 ViewGroup.LayoutParams params = picsGridView.getLayoutParams();
                 params.height = rows*160;
                 picsGridView.setLayoutParams(params);
                 picsGridView.setAdapter(adapter);
+                picsGridView.setOnItemClickListener(new StatusImageClickListener(status.getPic_urls()));
+
             }
 
 

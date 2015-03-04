@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lambda.weibo.fields.AuthInfo;
 import com.lambda.weibo.fields.Status;
+import com.lambda.weibo.fragments.ImagesFragment;
 import com.lambda.weibo.fragments.StatusFragment;
 import com.lambda.weibo.fragments.StatusesFragment;
 import com.lambda.weibo.requests.RequestHandler;
@@ -36,7 +37,9 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity implements
-        StatusesFragment.OnFragmentInteractionListener, StatusFragment.OnFragmentInteractionListener{
+        StatusesFragment.OnFragmentInteractionListener,
+        StatusFragment.OnFragmentInteractionListener,
+        ImagesFragment.OnFragmentInteractionListener{
     private static final String TAG = "main activity";
     public static final String PREF_NAME = "USER";
 
@@ -265,6 +268,11 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onImageFragmentInteraction(Uri uri) {
 
     }
 }

@@ -3,6 +3,8 @@ package com.lambda.weibo.fields;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 /**
  * Created by LU Tianming on 15-3-2.
  */
@@ -58,7 +60,7 @@ public class Status implements Parcelable {
     private int reposts_count;
     private int comments_count;
     private int attitudes_count;
-    private ImageUrl[] pic_urls;
+    private ArrayList<ImageUrl> pic_urls;
     private Status(Parcel in) {
         id = in.readLong();
         created_at = in.readString();
@@ -94,7 +96,7 @@ public class Status implements Parcelable {
         return thumbnail_pic;
     }
 
-    public ImageUrl[] getPic_urls() {
+    public ArrayList<ImageUrl> getPic_urls() {
         return pic_urls;
     }
 
