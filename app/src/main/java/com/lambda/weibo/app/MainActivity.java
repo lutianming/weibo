@@ -118,6 +118,18 @@ public class MainActivity extends ActionBarActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        FragmentManager manager = getFragmentManager();
+        int count = manager.getBackStackEntryCount();
+        if(count > 0){
+            manager.popBackStack();
+        }else{
+            super.onBackPressed();
+        }
+
+    }
+
     private void isAuthorized(){
         SharedPreferences preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 

@@ -81,8 +81,8 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
             nameView = (TextView) view.findViewById(R.id.name_textview);
             timeView = (TextView) view.findViewById(R.id.time_textview);
             statusView = (TextView) view.findViewById(R.id.status_textview);
-            profileImageView = (NetworkImageView) view.findViewById(R.id.statuses_profile_button);
-            picsGridView = (GridView) view.findViewById(R.id.statuses_pics_grid_view);
+            profileImageView = (NetworkImageView) view.findViewById(R.id.status_profile_image_view);
+            picsGridView = (GridView) view.findViewById(R.id.status_pics_grid_view);
             picsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -104,6 +104,10 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
             if (pic_urls != null && pic_urls.length > 0) {
                 ImageAdapter adapter = new ImageAdapter(this.itemView.getContext(), pic_urls);
+                int rows = (pic_urls.length-1) / 3 + 1;
+                ViewGroup.LayoutParams params = picsGridView.getLayoutParams();
+                params.height = rows*160;
+                picsGridView.setLayoutParams(params);
                 picsGridView.setAdapter(adapter);
             }
 
@@ -137,7 +141,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
                             StatusFragment fragment = StatusFragment.newInstance(status, comments);
                             FragmentManager manager = activity.getFragmentManager();
                             FragmentTransaction transaction = manager.beginTransaction();
-                            transaction.replace(R.id.fragment_container, fragment);
+                            transaction.replace(R.id.fragment_container, fragment, StatusFragment.TAG);
                             transaction.addToBackStack(null);
                             transaction.commit();
                         }

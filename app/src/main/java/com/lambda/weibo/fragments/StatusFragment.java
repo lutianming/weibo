@@ -9,15 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.lambda.weibo.adapters.CommentAdapter;
+import com.lambda.weibo.adapters.StatusWithCommentAdapter;
 import com.lambda.weibo.app.R;
 import com.lambda.weibo.fields.Comment;
 import com.lambda.weibo.fields.Status;
-import com.lambda.weibo.fields.User;
-import com.lambda.weibo.requests.RequestHandler;
 
 import java.util.ArrayList;
 
@@ -32,15 +27,11 @@ import java.util.ArrayList;
 public class StatusFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    public static final String TAG = "StatusFragment";
     private static final String STATUS = "status";
     private static final String COMMENTS = "comments";
 
     // TODO: Rename and change types of parameters
-    private TextView statusUserTextView;
-    private TextView statusTimeTextView;
-    private TextView statusTextView;
-    private NetworkImageView profileImageView;
-    private ImageLoader imageLoader;
     private RecyclerView commentsView;
     private RecyclerView.Adapter adapter;
     private LinearLayoutManager layoutManager;
@@ -78,7 +69,7 @@ public class StatusFragment extends Fragment {
             status = getArguments().getParcelable(STATUS);
             comments = getArguments().getParcelableArrayList(COMMENTS);
         }
-        adapter = new CommentAdapter(comments);
+        adapter = new StatusWithCommentAdapter(status, comments);
     }
 
     @Override
@@ -86,20 +77,9 @@ public class StatusFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_status, container, false);
-        statusUserTextView = (TextView) view.findViewById(R.id.status_user_textview);
-        statusTimeTextView = (TextView) view.findViewById(R.id.status_time_textview);
-        statusTextView = (TextView) view.findViewById(R.id.status_text_textview);
-        profileImageView = (NetworkImageView) view.findViewById(R.id.status_profile_image_view);
-        imageLoader = RequestHandler.getInstance(view.getContext()).getImageLoader();
-
-        User user = status.getUser();
-        statusUserTextView.setText(user.getName());
-        statusTimeTextView.setText(status.getCreated_at());
-        statusTextView.setText(status.getText());
-        profileImageView.setImageUrl(user.getProfile_image_url(), imageLoader);
 
         Activity activity = getActivity();
-        commentsView = (RecyclerView) view.findViewById(R.id.comments_recycle_view);
+        commentsView = (RecyclerView) view.findViewById(R.id.status_comments_recycle_view);
 
         layoutManager = new LinearLayoutManager(activity);
         commentsView.setLayoutManager(layoutManager);
