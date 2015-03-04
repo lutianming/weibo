@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lambda.weibo.adapters.DrawerItemAdapter;
 import com.lambda.weibo.fields.AuthInfo;
 import com.lambda.weibo.fields.Status;
 import com.lambda.weibo.fragments.ImagesFragment;
@@ -52,6 +55,10 @@ public class MainActivity extends ActionBarActivity implements
     private String access_token;
     private String expires_in;
     private String uid;
+
+    private RecyclerView drawerView;
+    private DrawerItemAdapter drawerItemAdapter;
+    private LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +94,11 @@ public class MainActivity extends ActionBarActivity implements
         };
         drawerLayout.setDrawerListener(drawerToggle);
 
+        drawerView = (RecyclerView) findViewById(R.id.left_drawer);
+        layoutManager = new LinearLayoutManager(this);
+        drawerView.setLayoutManager(layoutManager);
+        drawerItemAdapter = new DrawerItemAdapter(this);
+        drawerView.setAdapter(drawerItemAdapter);
         isAuthorized();
     }
 

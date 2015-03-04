@@ -1,16 +1,22 @@
 package com.lambda.weibo.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import com.lambda.weibo.adapters.UserAdapter;
 import com.lambda.weibo.app.R;
+import com.lambda.weibo.fields.Status;
+import com.lambda.weibo.fields.User;
+import com.lambda.weibo.viewholders.StatusViewHolder;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,8 +30,13 @@ public class UserFragment extends Fragment {
     // TODO;
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String USER = "user";
-    // TODO;
-    private JSONObject user;
+    private static final String STATUSES = "statuses";
+
+    private User user;
+    private ArrayList<Status> statuses;
+
+    private RecyclerView statusesView;
+    private UserAdapter adapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -38,10 +49,11 @@ public class UserFragment extends Fragment {
      * @return A new instance of fragment UserFragment.
      */
     // TODO;
-    public static UserFragment newInstance(JSONObject object) {
+    public static UserFragment newInstance(User user, ArrayList<Status> statuses) {
         UserFragment fragment = new UserFragment();
         Bundle args = new Bundle();
-        args.putString(USER, object.toString());
+        args.putParcelable(USER, user);
+        args.putParcelableArrayList(STATUSES, statuses);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,13 +66,10 @@ public class UserFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            String tmp = getArguments().getString(USER);
-            try {
-                user = new JSONObject(tmp);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            user = getArguments().getParcelable(USER);
+            statuses = getArguments().getParcelableArrayList(STATUSES);
         }
+        adapter = new UserAdapter(user, statuses);
     }
 
     @Override
@@ -81,7 +90,7 @@ public class UserFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            //mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
