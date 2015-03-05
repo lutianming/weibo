@@ -1,7 +1,6 @@
 package com.lambda.weibo.app;
 
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -12,7 +11,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,22 +19,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.lambda.weibo.actions.Action;
+import com.lambda.weibo.actions.StatusesAction;
 import com.lambda.weibo.adapters.DrawerItemAdapter;
 import com.lambda.weibo.fields.AuthInfo;
-import com.lambda.weibo.fields.Status;
 import com.lambda.weibo.fragments.ImagesFragment;
 import com.lambda.weibo.fragments.StatusFragment;
 import com.lambda.weibo.fragments.StatusesFragment;
 import com.lambda.weibo.requests.RequestHandler;
 import com.lambda.weibo.uris.AuthorizeUri;
-import com.lambda.weibo.uris.StatusesUri;
-import com.lambda.weibo.uris.UsersUri;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity implements
@@ -176,62 +168,12 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
     private void updateStatuses(){
-        SharedPreferences preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        access_token = preferences.getString("access_token", "");
-        uid = preferences.getString("uid", "");
-
-        String uri = StatusesUri.friendsTimeLine(access_token, 50);
-        Log.d(TAG, uri);
-        JsonObjectRequest request = new JsonObjectRequest
-                (Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Gson gson = new Gson();
-                        Type listType = new TypeToken<ArrayList<Status>>() {}.getType();
-                        String data = "";
-                        try {
-                            data = response.getJSONArray("statuses").toString(4);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        ArrayList<Status> statuses = gson.fromJson(data, listType);
-                        StatusesFragment fragment = StatusesFragment.newInstance(statuses);
-                        FragmentManager manager = getFragmentManager();
-                        FragmentTransaction transaction = manager.beginTransaction();
-                        transaction.replace(R.id.fragment_container, fragment);
-                        transaction.commit();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                });
-        RequestHandler.getInstance(this).addToRequestQueue(request);
+        Action action = new StatusesAction(this);
+        action.doAction();
     }
     private void authorize(){
         Intent intent = new Intent(this, AuthorizeActivity.class);
         startActivityForResult(intent, AUTHORIZE_REQUEST);
-    }
-    public void userInfo(View view) {
-        String uri = UsersUri.show(access_token, uid);
-
-        JsonObjectRequest request = new JsonObjectRequest
-                (Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        //TextView view = (TextView)findViewById(R.id.textView);
-                        //view.setText(response.toString());
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-                        error.printStackTrace();
-                    }
-                });
-        RequestHandler.getInstance(this).addToRequestQueue(request);
     }
 
     @Override

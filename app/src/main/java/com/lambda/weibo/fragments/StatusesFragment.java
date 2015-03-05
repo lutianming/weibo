@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.lambda.weibo.adapters.StatusAdapter;
 import com.lambda.weibo.app.R;
 import com.lambda.weibo.fields.Status;
+import com.lambda.weibo.listeners.StatusesRefreshListener;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -31,13 +33,18 @@ public class StatusesFragment extends Fragment{
     private static final String STATUSES = "statuses";
     private static final String ARG_PARAM2 = "param2";
 
+    public void setStatuses(ArrayList<Status> statuses) {
+        this.statuses = statuses;
+        adapter.setStatuses(statuses);
+    }
+
     // TODO: Rename and change types of parameters
     private ArrayList<Status> statuses;
 
     private OnFragmentInteractionListener mListener;
 
     private RecyclerView statusRecyclerView;
-    private RecyclerView.Adapter adapter;
+    private StatusAdapter adapter;
     private LinearLayoutManager layoutManager;
 
     // TODO: Rename and change types of parameters
@@ -78,7 +85,10 @@ public class StatusesFragment extends Fragment{
         layoutManager = new LinearLayoutManager(activity);
         statusRecyclerView.setLayoutManager(layoutManager);
         statusRecyclerView.setAdapter(adapter);
+        //statusRecyclerView.setOnScrollListener(new StatusesScrollListener());
 
+        SwipyRefreshLayout layout = (SwipyRefreshLayout) view.findViewById(R.id.swipyrefreshlayout);
+        layout.setOnRefreshListener(new StatusesRefreshListener(activity));
         return view;
     }
 

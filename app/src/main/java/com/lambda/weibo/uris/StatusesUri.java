@@ -40,6 +40,13 @@ public class StatusesUri extends BaseUri{
         return builder.build().toString();
     }
 
+    public static String userTimeline(String access_token, long uid){
+        Uri.Builder b = getBuilder()
+                .appendPath("user_timeline.json")
+                .appendQueryParameter("access_token", access_token)
+                .appendQueryParameter("uid", String.valueOf(uid));
+        return b.build().toString();
+    }
     public static String friendTimeLineIDs(String access_token){
         Uri.Builder b = getBuilder()
                 .appendPath("friends_timeline")

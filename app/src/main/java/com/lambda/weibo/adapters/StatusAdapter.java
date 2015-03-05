@@ -16,6 +16,19 @@ import java.util.ArrayList;
 public class StatusAdapter extends RecyclerView.Adapter<StatusViewHolder> {
     private static final String TAG = "StatusAdapter";
     private int totalNumber;
+
+    public void setStatuses(ArrayList<Status> statuses) {
+        this.statuses = statuses;
+        notifyDataSetChanged();
+    }
+    public void addNewStatuses(ArrayList<Status> newStatuses){
+        statuses.addAll(0, newStatuses);
+        notifyDataSetChanged();
+    }
+    public void addOldStatues(ArrayList<Status> oldStatuses){
+        statuses.addAll(oldStatuses);
+        notifyDataSetChanged();
+    }
     private ArrayList<Status> statuses;
 
     public StatusAdapter(ArrayList<Status> statuses1) {

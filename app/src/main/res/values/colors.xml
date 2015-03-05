@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="drawer_background" type="color">#DFFDFF00</item>
+    <item name="status_background" type="color">#767676</item>
+</resources>

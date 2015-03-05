@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,11 +33,22 @@ public class UserFragment extends Fragment {
     private static final String USER = "user";
     private static final String STATUSES = "statuses";
 
+    public void setUser(User user) {
+        this.user = user;
+        adapter.setUser(user);
+    }
+
+    public void setStatuses(ArrayList<Status> statuses) {
+        this.statuses = statuses;
+        adapter.setStatuses(statuses);
+    }
+
     private User user;
     private ArrayList<Status> statuses;
 
-    private RecyclerView statusesView;
+    private RecyclerView userView;
     private UserAdapter adapter;
+    private LinearLayoutManager layoutManager;
 
     private OnFragmentInteractionListener mListener;
 
@@ -76,7 +88,13 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment  ]
-        return inflater.inflate(R.layout.fragment_user, container, false);
+        View view = inflater.inflate(R.layout.fragment_user, container, false);
+        userView = (RecyclerView) view.findViewById(R.id.user_recycler_view);
+
+        layoutManager = new LinearLayoutManager(view.getContext());
+        userView.setLayoutManager(layoutManager);
+        userView.setAdapter(adapter);
+        return view;
     }
 
     // TODO;

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
 import com.android.volley.Request;
@@ -18,6 +19,7 @@ import com.lambda.weibo.fields.Status;
 import com.lambda.weibo.fragments.StatusesFragment;
 import com.lambda.weibo.requests.RequestHandler;
 import com.lambda.weibo.uris.StatusesUri;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +31,8 @@ import java.util.ArrayList;
  */
 public class StatusesAction extends Action implements View.OnClickListener {
     private String TAG = "StatusesAction";
+    private SwipyRefreshLayout refreshLayout;
+    private StatusesFragment fragment;
     public StatusesAction(Activity activity) {
         super(activity);
         name = "statuses";
@@ -37,8 +41,33 @@ public class StatusesAction extends Action implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         doAction();
+        DrawerLayout drawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
+        drawerLayout.closeDrawers();
     }
-    public void doAction(){
+
+    public void doAction(StatusesFragment f){
+        if(f == null){
+            fragment = StatusesFragment.newInstance(new ArrayList<Status>());
+
+            FragmentManager manager = activity.getFragmentManager();
+            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.commit();
+        }else{
+            fragment = f;
+        }
+
+        refreshLayout = (SwipyRefreshLayout) activity.findViewById(R.id.swipyrefreshlayout);
+        if(refreshLayout == null){
+            //it shouldn't be null!
+        }else{
+            if(!refreshLayout.isRefreshing()){
+                refreshLayout.setRefreshing(true);
+            }
+        }
+
         SharedPreferences preferences = activity.getSharedPreferences(MainActivity.PREF_NAME, Activity.MODE_PRIVATE);
         String access_token = preferences.getString("access_token", "");
         String uid = preferences.getString("uid", "");
@@ -59,14 +88,11 @@ public class StatusesAction extends Action implements View.OnClickListener {
                         }
 
                         ArrayList<Status> statuses = gson.fromJson(data, listType);
-                        StatusesFragment fragment = StatusesFragment.newInstance(statuses);
+                        fragment.setStatuses(statuses);
+                        if(refreshLayout != null){
+                            refreshLayout.setRefreshing(false);
+                        }
 
-                        FragmentManager manager = activity.getFragmentManager();
-                        manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-                        FragmentTransaction transaction = manager.beginTransaction();
-                        transaction.replace(R.id.fragment_container, fragment);
-                        transaction.commit();
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -75,5 +101,10 @@ public class StatusesAction extends Action implements View.OnClickListener {
                     }
                 });
         RequestHandler.getInstance(activity).addToRequestQueue(request);
+    }
+
+    @Override
+    public void doAction(){
+        doAction(null);
     }
 }

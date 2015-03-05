@@ -84,6 +84,8 @@ public class StatusFragment extends Fragment {
         layoutManager = new LinearLayoutManager(activity);
         commentsView.setLayoutManager(layoutManager);
         commentsView.setAdapter(adapter);
+
+
         return view;
     }
 

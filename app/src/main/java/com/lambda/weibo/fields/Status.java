@@ -55,7 +55,21 @@ public class Status implements Parcelable {
     private String original_pic;
     private Geo geo;
     private User user;
+
+    public Status getRetweeted_status() {
+        return retweeted_status;
+    }
+
     private Status retweeted_status;
+
+    public int getReposts_count() {
+        return reposts_count;
+    }
+
+    public int getComments_count() {
+        return comments_count;
+    }
+
     //private String annotations;
     private int reposts_count;
     private int comments_count;

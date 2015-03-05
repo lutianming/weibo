@@ -21,7 +21,7 @@ public class User implements Parcelable {
     public static final String FOLLOWES_COUNT = "followers_count";
     public static final String FRIENDS_COUNT = "friends_count";
     public static final String STATUSES_COUNT = "statuses_count";
-    public static final String FAVOURITES_COUNT ="favourites_count";
+    public static final String FAVOURITES_COUNT = "favourites_count";
     public static final String CREATED_AT = "created_at";
     public static final String FOLLOWING = "following";
     public static final String ALLOW_ALL_ACT_MSG = "allow_all_act_msg";
@@ -35,7 +35,7 @@ public class User implements Parcelable {
     public static final String ONLINE_STATUES = "online_status";
     public static final String BI_FOLLOERS_COUNT = "bi_followers_count";
     public static final Parcelable.Creator<User> CREATOR
-            = new Parcelable.Creator<User>(){
+            = new Parcelable.Creator<User>() {
 
         @Override
         public User createFromParcel(Parcel source) {
@@ -70,8 +70,12 @@ public class User implements Parcelable {
     private boolean allow_all_act_msg;
     private boolean geo_enabled;
     private boolean verified;
-
     private String remark;
+
+    public Status getStatus() {
+        return status;
+    }
+
     private Status status;
     private boolean allow_all_comment;
     private String avatar_large;
@@ -81,12 +85,15 @@ public class User implements Parcelable {
     private int online_statues;
     private int bi_folloers_count;
     private String lang;
-
-    private User(Parcel in){
+    private User(Parcel in) {
         id = in.readLong();
         screen_name = in.readString();
         name = in.readString();
         city = in.readInt();
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getProfile_image_url() {

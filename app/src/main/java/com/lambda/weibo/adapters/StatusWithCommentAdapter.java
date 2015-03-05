@@ -8,7 +8,7 @@ import com.lambda.weibo.app.R;
 import com.lambda.weibo.fields.Comment;
 import com.lambda.weibo.fields.Status;
 import com.lambda.weibo.viewholders.CommentViewHolder;
-import com.lambda.weibo.viewholders.StatusDetailViewHolder;
+import com.lambda.weibo.viewholders.StatusViewHolder;
 
 import java.util.ArrayList;
 
@@ -33,7 +33,7 @@ public class StatusWithCommentAdapter extends RecyclerView.Adapter<RecyclerView.
         if(viewType == STATUS_VIEW){
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.view_status, parent, false);
-            holder = new StatusDetailViewHolder(view);
+            holder = new StatusViewHolder(view);
 
         }
         else{
@@ -47,7 +47,7 @@ public class StatusWithCommentAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(position == 0){
-            StatusDetailViewHolder vh = (StatusDetailViewHolder) holder;
+            StatusViewHolder vh = (StatusViewHolder) holder;
             vh.update(status);
         }else{
             Comment comment = comments.get(position-1);

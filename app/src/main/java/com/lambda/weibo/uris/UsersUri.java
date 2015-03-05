@@ -6,11 +6,11 @@ import android.net.Uri;
  * Created by LU Tianming on 15-3-1.
  */
 public class UsersUri extends BaseUri {
-    public static String show(String access_token, String uid) {
+    public static String show(String access_token, long uid) {
         Uri.Builder builder = getBuilder()
                 .appendPath("show.json")
                 .appendQueryParameter("access_token", access_token)
-                .appendQueryParameter("uid", uid);
+                .appendQueryParameter("uid", String.valueOf(uid));
         return builder.build().toString();
     }
 

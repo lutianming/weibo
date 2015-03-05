@@ -43,7 +43,10 @@ public class StatusViewHolder extends RecyclerView.ViewHolder
     private TextView nameView;
     private TextView timeView;
     private TextView statusView;
+    private TextView countsView;
     private GridView picsGridView;
+    private TextView retweetedTextVew;
+    private GridView retweetedPicsGridView;
     private NetworkImageView profileImageView;
     private Status status;
     private ImageLoader imageLoader;
@@ -53,35 +56,52 @@ public class StatusViewHolder extends RecyclerView.ViewHolder
         nameView = (TextView) view.findViewById(R.id.name_textview);
         timeView = (TextView) view.findViewById(R.id.time_textview);
         statusView = (TextView) view.findViewById(R.id.status_textview);
+        countsView = (TextView) view.findViewById(R.id.counts_text_view);
         profileImageView = (NetworkImageView) view.findViewById(R.id.status_profile_image_view);
         picsGridView = (GridView) view.findViewById(R.id.status_pics_grid_view);
+        retweetedTextVew = (TextView) view.findViewById(R.id.retweeted_status_text_view);
+        retweetedPicsGridView = (GridView) view.findViewById(R.id.retweeted_pics_grid_view);
         imageLoader = RequestHandler.getInstance(view.getContext()).getImageLoader();
         view.setOnClickListener(this);
     }
 
     public void update(Status status) {
+        if(status == null) return;
         this.status = status;
         User user = status.getUser();
         nameView.setText(user.getName());
         profileImageView.setImageUrl(user.getProfile_image_url(), imageLoader);
         timeView.setText(status.getCreated_at());
         statusView.setText(status.getText());
-        ArrayList<ImageUrl> pic_urls = status.getPic_urls();
+        String counts = String.format("%d 转发/%d 评论", status.getReposts_count(), status.getComments_count());
+        countsView.setText(counts);
+        configGridView(picsGridView, status);
 
+        if(status.getRetweeted_status() != null){
+            Status retweeted = status.getRetweeted_status();
+            User retweetedUser = retweeted.getUser();
+            String text = retweetedUser.getName() + ":" + retweeted.getText();
+            retweetedTextVew.setText(text);
+            configGridView(retweetedPicsGridView, retweeted);
+        }else{
+            retweetedTextVew.setVisibility(View.GONE);
+        }
+    }
+
+    private void configGridView(GridView view, Status status){
+        ArrayList<ImageUrl> pic_urls = status.getPic_urls();
         if (pic_urls != null && pic_urls.size() > 0) {
             ThumbnailAdapter adapter = new ThumbnailAdapter(this.itemView.getContext(), pic_urls);
             int rows = (pic_urls.size() - 1) / 3 + 1;
-            ViewGroup.LayoutParams params = picsGridView.getLayoutParams();
+            ViewGroup.LayoutParams params = view.getLayoutParams();
             params.height = rows * 160;
-            picsGridView.setLayoutParams(params);
-            picsGridView.setAdapter(adapter);
-            picsGridView.setOnItemClickListener(new StatusImageClickListener(status.getPic_urls()));
-
+            view.setLayoutParams(params);
+            view.setAdapter(adapter);
+            view.setOnItemClickListener(new StatusImageClickListener(pic_urls));
+        }else{
+            view.setVisibility(View.GONE);
         }
-
-
     }
-
     @Override
     public void onClick(View v) {
         long id = 0;

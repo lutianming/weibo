@@ -30,6 +30,7 @@ public class StatusDetailViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void update(Status status) {
+        if(status == null) return;
         User user = status.getUser();
 
         nameTextView.setText(user.getName());

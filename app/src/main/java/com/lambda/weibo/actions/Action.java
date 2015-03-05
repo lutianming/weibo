@@ -20,4 +20,5 @@ public class Action{
     public Action(Activity activity){
         this.activity = activity;
     }
+    public void doAction(){}
 }

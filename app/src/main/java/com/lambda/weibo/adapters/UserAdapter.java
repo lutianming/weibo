@@ -19,6 +19,16 @@ public class UserAdapter extends RecyclerView.Adapter {
     private static final int USER = 0;
     private static final int STATUS = 1;
 
+    public void setUser(User user) {
+        this.user = user;
+        notifyItemChanged(0);
+    }
+
+    public void setStatuses(ArrayList<Status> statuses) {
+        this.statuses = statuses;
+        notifyDataSetChanged();
+    }
+
     private User user;
     private ArrayList<Status> statuses;
 
@@ -47,7 +57,7 @@ public class UserAdapter extends RecyclerView.Adapter {
             UserInfoViewHolder vh = (UserInfoViewHolder) holder;
             vh.update(user);
         }else{
-            Status status = statuses.get(position+1);
+            Status status = statuses.get(position - 1);
             StatusViewHolder vh = (StatusViewHolder) holder;
             vh.update(status);
         }
