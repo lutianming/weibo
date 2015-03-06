@@ -40,4 +40,5 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.10'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.github.orangegangsters:swipy:1.2.0@aar'
+    compile 'it.sephiroth.android.library.imagezoom:imagezoom:+'
 }

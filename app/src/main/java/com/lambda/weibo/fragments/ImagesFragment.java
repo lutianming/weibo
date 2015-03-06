@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.TextView;
 import com.lambda.weibo.adapters.ImageAdapter;
 import com.lambda.weibo.app.R;
 import com.lambda.weibo.fields.ImageUrl;
@@ -34,6 +35,7 @@ public class ImagesFragment extends Fragment {
     private ArrayList<ImageUrl> images;
     private int startPos;
     private ViewPager imagePager;
+    private TextView textView;
     private ImageAdapter adapter;
     private OnFragmentInteractionListener mListener;
 
@@ -74,9 +76,36 @@ public class ImagesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_images, container, false);
+        textView = (TextView) view.findViewById(R.id.image_num_text_view);
+        if(images.size() > 1){
+            textView.setText(String.format("%d/%d", startPos, images.size()));
+        }else{
+            textView.setVisibility(View.GONE);
+        }
+
         imagePager = (ViewPager) view.findViewById(R.id.images_pager);
         imagePager.setAdapter(adapter);
         imagePager.setCurrentItem(startPos);
+        imagePager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(images.size() > 1){
+                    textView.setText(String.format("%d/%d", position, images.size()));
+                }else{
+                    textView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         return view;
     }
 

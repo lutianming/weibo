@@ -1,18 +1,23 @@
 package com.lambda.weibo.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.lambda.weibo.app.R;
 import com.lambda.weibo.fields.ImageUrl;
 import com.lambda.weibo.requests.RequestHandler;
+import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,12 +31,13 @@ public class ImageFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String IMG = "img";
+
     private static final String THUMBNAIL = "thumbnail";
     private static final String ORIGINAL = "large";
     // TODO: Rename and change types of parameters
     private ImageUrl imageUrl;
     private String largeImgUrl;
-
+    private ImageView imageView;
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -70,9 +76,24 @@ public class ImageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_image, container, false);
-        NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.image_view);
-        ImageLoader loader = RequestHandler.getInstance(view.getContext()).getImageLoader();
-        imageView.setImageUrl(largeImgUrl, loader);
+        imageView = (ImageViewTouch) view.findViewById(R.id.image_view);
+        //ImageLoader loader = RequestHandler.getInstance(view.getContext()).getImageLoader();
+        Log.d("IMAGE", largeImgUrl);
+        ImageRequest request = new ImageRequest(largeImgUrl,
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap bitmap) {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                }, 0, 0, null,
+                new Response.ErrorListener() {
+                    public void onErrorResponse(VolleyError error) {
+                        imageView.setImageResource(R.drawable.ic_action_error);
+                    }
+                });
+
+        RequestHandler.getInstance(view.getContext()).addToRequestQueue(request);
+        //imageView.setImageUrl(largeImgUrl, loader);
         return view;
     }
 

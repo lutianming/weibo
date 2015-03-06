@@ -4,11 +4,9 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.lambda.weibo.app.R;
 import com.lambda.weibo.fields.ImageUrl;
 import com.lambda.weibo.requests.RequestHandler;
 
@@ -46,14 +44,13 @@ public class ThumbnailAdapter extends BaseAdapter {
         NetworkImageView imageView;
         if (convertView == null) {  // if it's not recycled, initialize some attributes
             imageView = new NetworkImageView(mContext);
-            int dim = 150;
-            imageView.setLayoutParams(new GridView.LayoutParams(dim, dim));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            //int dim = 150;
+            //imageView.setLayoutParams(new GridView.LayoutParams(dim, dim));
+            imageView.setScaleType(ImageView.ScaleType.CENTER);
             imageView.setPadding(8, 8, 8, 8);
         } else {
             imageView = (NetworkImageView) convertView;
         }
-        imageView.setImageResource(R.drawable.ic_action_error);
         ImageUrl url = imageUrls.get(position);
         imageView.setImageUrl(url.getThumbnail_pic(), imageLoader);
         return imageView;
