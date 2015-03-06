@@ -29,7 +29,6 @@ import com.lambda.weibo.fragments.StatusFragment;
 import com.lambda.weibo.listeners.StatusImageClickListener;
 import com.lambda.weibo.requests.RequestHandler;
 import com.lambda.weibo.uris.CommentsUri;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
@@ -116,20 +115,14 @@ public class StatusViewHolder extends RecyclerView.ViewHolder
                     @Override
                     public void onResponse(JSONObject response) {
                         Gson gson = new Gson();
-                        Type listtype = new TypeToken<ArrayList<Comment>>() {
-                        }.getType();
-                        String data;
-                        try {
-                            data = response.getJSONArray("comments").toString(4);
-                        } catch (JSONException e) {
-                            data = "";
-                            e.printStackTrace();
-                        }
+                        Type listtype = new TypeToken<ArrayList<Comment>>() {}.getType();
+                        String data = response.optJSONArray("comments").toString();
+
                         ArrayList<Comment> comments = gson.fromJson(data, listtype);
                         StatusFragment fragment = StatusFragment.newInstance(status, comments);
                         FragmentManager manager = activity.getFragmentManager();
                         FragmentTransaction transaction = manager.beginTransaction();
-                        transaction.replace(R.id.fragment_container, fragment, StatusFragment.TAG);
+                        transaction.replace(R.id.fragment_container, fragment);
                         transaction.addToBackStack(null);
                         transaction.commit();
                     }

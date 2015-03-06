@@ -20,7 +20,6 @@ import com.lambda.weibo.fragments.StatusesFragment;
 import com.lambda.weibo.requests.RequestHandler;
 import com.lambda.weibo.uris.StatusesUri;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
@@ -80,12 +79,7 @@ public class StatusesAction extends Action implements View.OnClickListener {
                     public void onResponse(JSONObject response) {
                         Gson gson = new Gson();
                         Type listType = new TypeToken<ArrayList<Status>>() {}.getType();
-                        String data = "";
-                        try {
-                            data = response.getJSONArray("statuses").toString(4);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        String data = response.optJSONArray("statuses").toString();
 
                         ArrayList<Status> statuses = gson.fromJson(data, listType);
                         fragment.setStatuses(statuses);
