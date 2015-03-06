@@ -75,13 +75,13 @@ public class MainActivity extends ActionBarActivity implements
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                toolbar.setTitle("opened");
+                //toolbar.setTitle("opened");
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                toolbar.setTitle("closed");
+                //toolbar.setTitle("closed");
             }
         };
         drawerLayout.setDrawerListener(drawerToggle);
