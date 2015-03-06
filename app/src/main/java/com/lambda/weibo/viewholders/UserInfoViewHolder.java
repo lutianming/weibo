@@ -16,6 +16,9 @@ public class UserInfoViewHolder extends RecyclerView.ViewHolder {
     private TextView name;
     private TextView location;
     private TextView description;
+    private TextView friends;
+    private TextView followers;
+    private TextView statues;
     private NetworkImageView profileImage;
     private ImageLoader imageLoader;
 
@@ -24,6 +27,10 @@ public class UserInfoViewHolder extends RecyclerView.ViewHolder {
         name = (TextView) itemView.findViewById(R.id.name_text_view);
         location = (TextView) itemView.findViewById(R.id.location_text_view);
         description = (TextView) itemView.findViewById(R.id.description_text_view);
+        friends = (TextView) itemView.findViewById(R.id.friends_count_text_view);
+        followers = (TextView) itemView.findViewById(R.id.followers_count_text_view);
+        statues = (TextView) itemView.findViewById(R.id.statuses_count_text_view);
+
         profileImage = (NetworkImageView) itemView.findViewById(R.id.profile_image_view);
         imageLoader = RequestHandler.getInstance(itemView.getContext()).getImageLoader();
     }
@@ -32,6 +39,9 @@ public class UserInfoViewHolder extends RecyclerView.ViewHolder {
         name.setText(user.getName());
         location.setText(user.getLocation());
         description.setText(user.getDescription());
+        friends.setText(String.valueOf(user.getFriends_count()));
+        followers.setText(String.valueOf(user.getFollowers_count()));
+        statues.setText(String.valueOf(user.getStatuses_count()));
         profileImage.setImageUrl(user.getProfile_image_url(), imageLoader);
     }
 }

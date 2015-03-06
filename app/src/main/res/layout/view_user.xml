@@ -26,4 +26,44 @@
             android:text="description"
             android:id="@+id/description_text_view" android:layout_below="@+id/location_text_view"
             android:layout_centerHorizontal="true"/>
+    <View style="@style/Divider" android:layout_below="@+id/description_text_view" android:id="@+id/divider"></View>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_below="@+id/divider"
+            android:layout_centerHorizontal="true" android:showDividers="middle">
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/friends_count_text_view" android:layout_weight="1" android:gravity="right"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/friends"
+            android:id="@+id/friends_text_view" android:layout_weight="1"/>
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/followers_count_text_view" android:layout_weight="1" android:gravity="center_horizontal|right"/>
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/followers"
+                android:id="@+id/followers_text_view" android:layout_weight="1"/>
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/statuses_count_text_view" android:layout_weight="1" android:gravity="right"/>
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/statuses"
+                android:id="@+id/statuses_text_view"
+                android:layout_weight="1"/>
+    </LinearLayout>
+
 </RelativeLayout>
