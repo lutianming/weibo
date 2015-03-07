@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -44,20 +45,26 @@ public class MainActivity extends ActionBarActivity implements
 
     static final int AUTHORIZE_REQUEST = 1;
 
-    private String access_token;
-    private String expires_in;
-    private String uid;
+    private AuthInfo authInfo;
 
     private RecyclerView drawerView;
     private DrawerItemAdapter drawerItemAdapter;
     private LinearLayoutManager layoutManager;
+    private FrameLayout frameLayout;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if(savedInstanceState != null){
+
+        }else{
+
+        }
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationIcon(R.drawable.ic_drawer);
@@ -91,13 +98,23 @@ public class MainActivity extends ActionBarActivity implements
         drawerView.setLayoutManager(layoutManager);
         drawerItemAdapter = new DrawerItemAdapter(this);
         drawerView.setAdapter(drawerItemAdapter);
-        isAuthorized();
+
+        frameLayout = (FrameLayout) findViewById(R.id.fragment_container);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        if(frameLayout.getChildCount() == 0){
+            isAuthorized();
+        }else{
 
+        }
     }
 
     @Override
@@ -148,10 +165,10 @@ public class MainActivity extends ActionBarActivity implements
                         @Override
                         public void onResponse(JSONObject response) {
                             Gson gson = new Gson();
-                            AuthInfo info = gson.fromJson(response.toString(), AuthInfo.class);
+                            authInfo = gson.fromJson(response.toString(), AuthInfo.class);
                             //2 hours
-                            if(info.getExpire_in() > 60*60*2){
-                                updateStatuses();
+                            if(authInfo.getExpire_in() > 60*60*2){
+                                    updateStatuses();
                             }else{
                                 authorize();
                             }
