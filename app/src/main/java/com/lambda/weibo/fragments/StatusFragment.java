@@ -65,11 +65,25 @@ public class StatusFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            status = getArguments().getParcelable(STATUS);
-            comments = getArguments().getParcelableArrayList(COMMENTS);
+        Bundle args;
+        if(savedInstanceState != null) {
+            args = savedInstanceState;
+        }else{
+            args = getArguments();
+        }
+
+        if (args != null) {
+            status = args.getParcelable(STATUS);
+            comments = args.getParcelableArrayList(COMMENTS);
         }
         adapter = new StatusWithCommentAdapter(status, comments);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(STATUS, status);
+        outState.putParcelableArrayList(COMMENTS, comments);
     }
 
     @Override
@@ -84,7 +98,6 @@ public class StatusFragment extends Fragment {
         layoutManager = new LinearLayoutManager(activity);
         commentsView.setLayoutManager(layoutManager);
         commentsView.setAdapter(adapter);
-
 
         return view;
     }

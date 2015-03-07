@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * interface.
  */
 public class StatusesFragment extends Fragment{
-
+    public  static final String TAG = "StatusesFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String STATUSES = "statuses";
@@ -66,12 +66,30 @@ public class StatusesFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-             statuses = getArguments().getParcelableArrayList(STATUSES);
+        Bundle args;
+        if(savedInstanceState != null){
+            args = savedInstanceState;
+        }else{
+            args = getArguments();
         }
 
-        // TODO: Change Adapter to display your content
+        if (args != null) {
+            statuses = args.getParcelableArrayList(STATUSES);
+        }
+
         adapter = new StatusAdapter(statuses);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(STATUSES, statuses);
     }
 
     @Override

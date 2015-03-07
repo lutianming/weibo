@@ -77,11 +77,26 @@ public class UserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            user = getArguments().getParcelable(USER);
-            statuses = getArguments().getParcelableArrayList(STATUSES);
+        Bundle args;
+        if(savedInstanceState != null){
+            args = savedInstanceState;
+        }else{
+            args = getArguments();
         }
+
+        if (args != null) {
+            user = args.getParcelable(USER);
+            statuses = args.getParcelableArrayList(STATUSES);
+        }
+
         adapter = new UserAdapter(user, statuses);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(USER, user);
+        outState.putParcelableArrayList(STATUSES, statuses);
     }
 
     @Override
