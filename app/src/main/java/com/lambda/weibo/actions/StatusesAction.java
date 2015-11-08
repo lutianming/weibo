@@ -47,7 +47,7 @@ public class StatusesAction extends Action implements View.OnClickListener {
     public void doAction(StatusesFragment f){
         if(f == null){
             fragment = StatusesFragment.newInstance(new ArrayList<Status>());
-
+            Log.d(TAG, "new fragment");
             FragmentManager manager = activity.getFragmentManager();
             manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
